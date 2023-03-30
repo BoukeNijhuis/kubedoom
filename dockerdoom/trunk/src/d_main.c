@@ -1094,25 +1094,30 @@ void D_DoomMain (void)
 
     DEH_printf("W_Init: Init WADfiles.\n");
     D_AddFile(iwadfile);
-   
+
+    // Now that we've loaded the IWAD, we can figure out what gamemission
+    // we're playing and which version of Vanilla Doom we need to emulate.
+    D_IdentifyVersion();
+    InitGameVersion();
+
 // *** PID BEGIN ***
 // If the command-line flag to suppress auto-loading of custom
 // ps management levels is *not* there, load the appropriate level.
     p = M_CheckParm ("-nopslev");
-    if (p)
+    if (!p)
     {
 // Add psdoom1.wad if this is registered (Doom 1) or retail (Ultimite Doom).
 // If we loaded it, set the flag to true so we can place the monsters in the
 // correct positions.
 		if ( gamemode == registered || gamemode == retail ){
-			D_AddFile(iwadfile);
+			D_AddFile(psdoom1wad);
 			ps_level_loaded = true;
 		}
 // Add psdoom2.wad if this is commercial (Doom 2) and not an add-on pack.
 // If we loaded it, set the flag to true so we can place the monsters in the
 // correct positions.
 		if ( gamemode == commercial && gamemission == doom2 ) {
-			D_AddFile(iwadfile);
+			D_AddFile(psdoom2wad);
 			ps_level_loaded = true;
 		}
     }

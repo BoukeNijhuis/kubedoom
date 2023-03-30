@@ -69,7 +69,8 @@ func (m podmode) getEntities() []string {
 	if namespace, exists := os.LookupEnv("NAMESPACE"); exists {
 		args = []string{"kubectl", "get", "pods", "--namespace", namespace, "-o", "go-template", "--template={{range .items}}{{.metadata.namespace}}/{{.metadata.name}} {{end}}"}
 	} else {
-		args = []string{"kubectl", "get", "pods", "-A", "-o", "go-template", "--template={{range .items}}{{.metadata.namespace}}/{{.metadata.name}} {{end}}"}
+	    // dirty fix for host.docker.internal
+		args = []string{"kubectl", "get", "pods", "-A", "--insecure-skip-tls-verify", "-o", "go-template", "--template={{range .items}}{{.metadata.namespace}}/{{.metadata.name}} {{end}}"}
 	}
 	output := outputCmd(args)
 	outputstr := strings.TrimSpace(output)
@@ -170,10 +171,10 @@ func main() {
 	log.Print("Create virtual display")
 	startCmd("/usr/bin/Xvfb :99 -ac -screen 0 640x480x24")
 	time.Sleep(time.Duration(2) * time.Second)
-	startCmd("x11vnc -geometry 640x480 -forever -usepw -display :99")
+	startCmd("x11vnc -geometry 1920x1080 -forever -usepw -display :99")
 	log.Print("You can now connect to it with a VNC viewer at port 5900")
 
 	log.Print("Trying to start DOOM ...")
-	startCmd("/usr/bin/env DISPLAY=:99 /usr/local/games/psdoom -warp -E1M1 -skill 1 -nomouse")
+	startCmd("/usr/bin/env DISPLAY=:99 /usr/local/games/psdoom -skill 1 -nomouse")
 	socketLoop(listener, mode)
 }

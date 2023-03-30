@@ -23,11 +23,7 @@ In order to run locally you will need to
 Run `ghcr.io/storax/kubedoom:latest` with docker locally:
 
 ```console
-$ docker run -p5901:5900 \
-  --net=host \
-  -v ~/.kube:/root/.kube \
-  --rm -it --name kubedoom \
-  ghcr.io/storax/kubedoom:latest
+$ docker run -p5901:5900 -v ~/.kube:/root/.kube --rm -it --name kubedoom boukedoom
 ```
 
 Optionally, if you set `-e NAMESPACE={your namespace}` you can limit Kubedoom to deleting pods in a single namespace
